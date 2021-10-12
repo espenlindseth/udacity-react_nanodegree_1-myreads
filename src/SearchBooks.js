@@ -1,13 +1,38 @@
 import React, {Component} from 'react'
 import { Link }  from 'react-router-dom'
-
+import * as BooksAPI from './BooksAPI'
+import Book from './Book'
 class SearchBooks extends Component {
+  state = {
+    foundBooks: []
+  }
+
+  findBooks = (event) => {
+    if (event) {
+      BooksAPI.search(event)
+        .then((foundBooks) => {
+          foundBooks.length > 0 ?
+            this.setState(() => ({
+              foundBooks
+            }))
+          : this.setState(() => ({
+              foundBooks: [] 
+          }))
+      })
+    } else {
+      this.setState(() => ({
+        foundBooks: []
+      }))
+    }
+  }
+
   render () {
+    const modifyShelf = this.props.modifyShelf
     return(
       <div className="search-books">
         <div className="search-books-bar">
           <Link to="/">
-            <button className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</button>
+            <button className="close-search">Close</button>
           </Link>
           <div className="search-books-input-wrapper">
             {/*
@@ -18,12 +43,20 @@ class SearchBooks extends Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author"/>
+            <input onChange={(event) => this.findBooks(event.target.value)} type="text" placeholder="Search by title or author"/>
 
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <ol className="books-grid">
+            {this.state.foundBooks.map((book) => (
+              <Book
+                book = {book}
+                shelf = "none"
+                modifyShelf = {modifyShelf}
+              />
+            ))}
+          </ol>
         </div>
       </div>
       )
