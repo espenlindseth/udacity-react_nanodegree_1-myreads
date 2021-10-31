@@ -26,8 +26,15 @@ class SearchBooks extends Component {
     }
   }
 
+  checkForShelf = (book) => {
+    const currentBook = this.props.currentBooks.find(currentBook => currentBook.id === book.id)
+    const currentShelf = (currentBook !== undefined) ? currentBook.shelf : 'none'
+    return currentShelf
+  }
+
   render () {
     const modifyShelf = this.props.modifyShelf
+
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -50,10 +57,10 @@ class SearchBooks extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {this.state.foundBooks.map((book) => (
-              <li key={book.key}>
+              <li key={book.id}>
                 <Book
                   book = {book}
-                  shelf = "none"
+                  shelf = {this.checkForShelf(book)}
                   modifyShelf = {modifyShelf}
                 />
               </li>

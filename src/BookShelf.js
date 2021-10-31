@@ -14,7 +14,7 @@ class BookShelf extends Component {
               <li key={book.id}>
                 <Book
                   book={book}
-                  shelf={shelf}
+                  shelf={shelf.key}
                   modifyShelf = {modifyShelf}
                 />
               </li>
